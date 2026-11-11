@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kuis Neuropatologi – Neoplasma SSP</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--tx:#14213d;--mut:#5b6478;--bd:#d9deea;--pri:#1d4ed8;--ok:#15803d;--okb:#e7f6ec;--no:#b91c1c;--nob:#fdeaea;--neu:#f1f3f9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--card:#17203a;--tx:#e8ecf7;--mut:#9aa6c2;--bd:#2b3659;--pri:#6e9bff;--ok:#4ade80;--okb:#12301f;--no:#f87171;--nob:#3a1717;--neu:#1d2748}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px}
+.w{max-width:820px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:14px}
+h1{font-size:1.4rem;margin:0 0 6px}.mut{color:var(--mut);font-size:.9rem}
+.bar{height:8px;background:var(--neu);border-radius:99px;overflow:hidden;margin:8px 0 14px}.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .3s}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--neu);color:var(--mut);margin-right:6px}
+.stem{font-size:1.02rem;margin:10px 0 14px}
+.opt{display:flex;gap:10px;width:100%;text-align:left;background:var(--card);color:var(--tx);border:1.5px solid var(--bd);border-radius:10px;padding:11px 13px;margin-bottom:8px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--pri)}.opt:disabled{cursor:default}
+.L{font-weight:700;min-width:22px;color:var(--pri)}
+.opt.ok{border-color:var(--ok);background:var(--okb)}.opt.no{border-color:var(--no);background:var(--nob)}
+.ex{display:none;margin:6px 0 0;font-size:.88rem;color:var(--mut)}.opt.show .ex{display:block}.opt.ok .ex,.opt.no .ex{color:var(--tx)}
+.oc{flex:1}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:600;cursor:pointer}
+.btn.g{background:var(--neu);color:var(--tx)}
+.row{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:12px}
+.big{font-size:2.4rem;font-weight:800}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script>
+// Format: Q(level, soal, [opsi benar, opsi salah x4]) — setiap opsi = [teks, pembahasan]. Opsi diacak saat ditampilkan.
+const Q=(lv,s,o)=>({lv,s,o});
+const DATA=[
+// ===== C1–C2 =====
+Q(2,"Neonatus lahir dengan defek lumbosakral yang memperlihatkan kanalis neuralis terbuka ke permukaan tubuh. Pemeriksaan serum ibu yang paling relevan untuk skrining kelainan ini adalah…",[
+["Alfa-fetoprotein (AFP)","✔ Pada defek tabung saraf terbuka, AFP janin bocor ke cairan amnion lalu ke serum ibu. Slide menyebut AFP (antigen yang sama pada hepatoma) sebagai skrining yang baik untuk spina bifida."],
+["β-hCG","Penanda trofoblas; dipakai pada skrining aneuploidi, tidak spesifik untuk defek penutupan tabung saraf."],
+["Estriol tak terkonjugasi","Bagian skrining multimarker aneuploidi; bukan penanda defek tabung saraf."],
+["Inhibin A","Meningkat pada quadruple test sindrom Down; tidak mencerminkan defek neural tube."],
+["PAPP-A","Penanda skrining aneuploidi trimester I; tidak dipakai untuk mendeteksi defek tabung saraf."]]),
+Q(1,"Meningioma secara histogenetik berasal dari sel pada struktur…",[
+["Granulasio arachnoidea pada sinus venosus, melekat pada dura","✔ Slide: meningioma timbul dari granulasi arachnoid sinus venosus dan menempel pada dura. Sel asalnya adalah sel meningotelial (arachnoid cap cell)."],
+["Astrosit fibriler substansia alba","Asal astrositoma (glia), bukan meningioma."],
+["Oligodendrosit","Asal oligodendroglioma; sel glia penghasil mielin."],
+["Sel Schwann selubung saraf","Asal schwannoma; tumor selubung saraf, bukan selaput otak."],
+["Sel ependima pelapis ventrikel","Asal ependimoma dan papiloma pleksus koroideus."]]),
+Q(1,"Berdasarkan pemisahan oleh tentorium cerebelli, pada orang dewasa tumor primer otak paling sering ditemukan di…",[
+["Supratentorial (hemisfer serebri)","✔ Slide: tumor supratentorial pada dewasa, infratentorial pada anak. Tentorium memisahkan serebrum (di atas) dari serebelum (di bawah)."],
+["Infratentorial (serebelum)","Lokasi khas pada anak, bukan dewasa."],
+["Batang otak saja","Tidak menjadi lokasi predominan; glioma batang otak relatif jarang."],
+["Ventrikel IV","Lokasi khas ependimoma yang relatif jarang."],
+["Medula spinalis","Bukan lokasi tersering tumor primer SSP pada dewasa."]]),
+Q(2,"Bayi dengan makrokrania dan hidrosefalus. Pencitraan menunjukkan kista besar di fossa posterior yang berhubungan dengan ventrikel IV disertai hipoplasia vermis serebelum. Diagnosis yang paling sesuai adalah…",[
+["Malformasi Dandy-Walker","✔ Slide: Dandy-Walker = kista serebelar pada malformasi fossa posterior (infratentorial), sering disertai hidrosefalus."],
+["Malformasi Arnold-Chiari","Ciri utamanya herniasi infratentorial (tonsil/medula turun melalui foramen magnum), bukan kista fossa posterior."],
+["Holoprosensefali","Kegagalan pembelahan otak depan (forebrain), bukan fossa posterior."],
+["Polimikrogiria","Gangguan migrasi/organisasi korteks dengan girus kecil berlebih."],
+["Siringomielia","Rongga kistik pada medula spinalis, bukan fossa posterior."]]),
+Q(1,"Gambaran mikroskopik yang paling karakteristik untuk tumor yang berasal dari sel meningotelial adalah…",[
+["Pusaran sel (whorls) dengan badan psamoma","✔ Slide: meningioma = whorls dan psammoma bodies, dengan hiperostosis tulang di atas tumor."],
+["Nekrosis dengan pseudopalisading","Ciri glioblastoma (astrositoma grade 4)."],
+["Verocay bodies dan area Antoni A/B","Ciri schwannoma."],
+["Rosette sel kecil biru","Ciri tumor neuroektodermal primitif seperti medulloblastoma."],
+["Fasikulus herringbone sel spindle atipik","Pola yang dapat ditemukan pada MPNST."]]),
+Q(2,"Tumor intrakranial yang paling sering ditemukan secara keseluruhan (primer maupun sekunder) adalah…",[
+["Metastasis dari karsinoma paru, payudara, dan saluran cerna","✔ Slide: tumor sekunder (metastasis dari Ca payudara, paru, GIT) adalah yang tersering."],
+["Glioblastoma","Tumor primer ganas tersering, tetapi jumlah keseluruhannya lebih sedikit daripada metastasis."],
+["Meningioma","Salah satu tumor primer tersering, namun bukan yang tersering secara keseluruhan."],
+["Astrositoma pilositik","Tumor khas anak; insidensinya jauh lebih rendah."],
+["Medulloblastoma","Tumor embrional serebelum pada anak; tidak tersering secara keseluruhan."]]),
+Q(2,"Perbedaan histologi yang membedakan glioblastoma (grade 4) dari astrositoma anaplastik (grade 3) adalah adanya…",[
+["Nekrosis dengan pseudopalisading","✔ Slide: anaplastik = hiperselularitas, pleomorfisme, mitosis, proliferasi endotel; GBM = semua itu ditambah nekrosis dan pseudopalisading."],
+["Proliferasi endotel vaskular","Sudah ada pada astrositoma anaplastik, tidak khas pembeda."],
+["Peningkatan aktivitas mitosis","Sudah muncul pada grade 3."],
+["Hiperselularitas dan pleomorfisme","Sudah ditemukan sejak astrositoma low grade."],
+["Infiltrasi difus ke parenkim sekitar","Sifat semua astrositoma (infiltratif, batas tidak tegas), bukan pembeda grade."]]),
+Q(1,"Pola Antoni A dan Antoni B disertai Verocay bodies merupakan ciri histologi…",[
+["Schwannoma","✔ Slide: schwannoma — sel Schwann membentuk whorls, nuclear palisading, Antoni A/B, Verocay bodies; berkapsul."],
+["Neurofibroma","Sel spindle bland berinti bergelombang dalam stroma kolagen/miksoid; tidak berkapsul."],
+["Meningioma","Whorls dan psammoma bodies, bukan Antoni A/B."],
+["Ependimoma","Tumor sel ependima di ventrikel, bukan pola Antoni."],
+["Oligodendroglioma","Tumor glia dewasa yang jinak dan jarang; tidak menunjukkan Verocay bodies."]]),
+Q(1,"Neurofibromatosis tipe 1 (von Recklinghausen) diturunkan secara…",[
+["Autosomal dominan, lokus 17q","✔ Slide: NF1 (common), AD, 17q, sekitar 1:3000."],
+["Autosomal dominan, lokus 22q","22q adalah lokus NF2."],
+["Autosomal resesif, lokus 17q","Pola pewarisan salah; NF bersifat dominan."],
+["Autosomal resesif, lokus 22q","Pola pewarisan dan lokus keduanya tidak sesuai."],
+["X-linked dominan","Bukan pola pewarisan neurofibromatosis."]]),
+Q(1,"Kombinasi gejala berikut yang paling mencerminkan peningkatan tekanan intrakranial akibat tumor otak adalah…",[
+["Nyeri kepala, muntah, nadi lambat, dan papiledema","✔ Slide (clinical features): raised ICP = headache, vomiting, slow pulse, papilledema; di samping defisit lokal seperti paralisis dan kejang."],
+["Demam, kaku kuduk, fotofobia","Trias klasik meningitis, bukan efek massa."],
+["Takikardia, hipotensi, sianosis","Gambaran syok/hipoksia; peningkatan TIK cenderung disertai bradikardia (refleks Cushing)."],
+["Vertigo, tinnitus, tuli sensorineural","Gejala lesi N. VIII/sudut serebelopontin, bukan TIK umum."],
+["Poliuria, polidipsia, hipernatremia","Mengarah ke gangguan hipotalamus-hipofisis, bukan trias TIK."]]),
+Q(2,"Neuron matur hampir tidak pernah menjadi asal neoplasma. Alasan yang paling tepat adalah…",[
+["Neuron matur adalah sel permanen yang tidak memasuki siklus sel","✔ Slide: “Mature neurons do not give rise to neoplasms (permanent cells)”. Tumor primer SSP berasal dari glia, selaput otak, sel primitif, selubung saraf."],
+["Neuron termasuk sel stabil yang berproliferasi saat cedera","Salah: neuron bukan sel stabil; hepar/ginjal adalah contoh sel stabil."],
+["Neuron termasuk sel labil yang terus beregenerasi","Salah: sel labil contohnya epitel usus dan sumsum tulang."],
+["Neuron terlindung total oleh sawar darah-otak dari karsinogen","Bukan dasar patologis; sawar tidak menjelaskan tidak adanya tumor neuronal."],
+["Seluruh neuron mutan segera dieliminasi apoptosis","Tidak benar secara umum; dasar utamanya status sel permanen."]]),
+Q(2,"Anak 5 tahun dengan tumor serebelum yang berasal dari sel blast primitif dan tersusun dalam rosette (upaya pembentukan saraf). Tumor ini adalah…",[
+["Medulloblastoma","✔ Slide neuroektodermal: asal sel blast primitif; rosette; medulloblastoma = serebelum (infratentorial, tipikal anak)."],
+["Retinoblastoma","Tumor neuroektodermal retina, bukan serebelum."],
+["Neuroblastoma","Slide: tumor di kelenjar adrenal."],
+["Ganglioneuroma","Slide: lokasi mediastinum; tumor matang/jinak."],
+["Astrositoma fibriler","Tumor glia dewasa, supratentorial, bukan tumor blast primitif."]]),
+Q(1,"Kelompok tumor berikut yang seluruhnya berasal dari sel ependima dan turunannya adalah…",[
+["Ependimoma, papiloma pleksus koroideus, kista koloid","✔ Slide primary brain tumors: Ependyma → ependymoma, choroid plexus papilloma, colloid cyst (ventrikel)."],
+["Astrositoma, oligodendroglioma","Keduanya tumor glia non-ependimal."],
+["Meningioma, hemangioblastoma","Tumor selaput otak dan vaskular."],
+["Schwannoma, neurofibroma","Tumor selubung saraf."],
+["Adenoma hipofisis, kraniofaringioma","Tumor regio hipofisis."]]),
+Q(2,"Bayi dengan satu mata di garis tengah (siklopia) dan proboskis di atasnya; otopsi menunjukkan hemisfer serebri tidak terbelah. Diagnosisnya adalah…",[
+["Holoprosensefali","✔ Slide forebrain: holoprosencephaly = kegagalan pembelahan prosensefalon, disertai anomali wajah garis tengah (siklopia)."],
+["Anensefali","Tidak ada kalvaria dan otak di atas; defek tabung saraf anterior."],
+["Polimikrogiria","Girus kecil banyak; bukan kegagalan pembelahan hemisfer."],
+["Agenesis korpus kalosum","Absennya komisura antar-hemisfer; tidak menyebabkan siklopia."],
+["Ensefalokel","Herniasi otak melalui defek kranial; tidak menjelaskan fusi hemisfer."]]),
+Q(2,"Astrositoma pada anak memiliki karakteristik khas berikut…",[
+["Infratentorial (serebelum), kistik, jinak, tipe pilositik","✔ Slide: Children = infratentorial (cerebellum), cystic, benign, pilocytic. Dewasa = supratentorial, solid, fibriler."],
+["Supratentorial, solid, ganas, tipe fibriler","Itu karakteristik astrositoma dewasa."],
+["Batang otak, difus, selalu grade 4","Tidak sesuai; tidak semua pada anak grade 4."],
+["Ventrikel IV, padat, tipe protoplasmik","Ventrikel IV khas ependimoma."],
+["Medula spinalis, berkapsul, tipe Antoni","Antoni adalah pola schwannoma."]]),
+// ===== C3–C4 =====
+Q(3,"Wanita 54 tahun, nyeri kepala progresif 8 bulan dan kejang fokal tungkai. MRI: massa parasagital berbasis dura dengan penebalan tulang kalvaria. Saat reseksi, massa berbatas tegas menekan parenkim tanpa invasi. Temuan yang paling kuat mengarahkan ke asal selaput otak dan bukan glia adalah…",[
+["Hiperostosis tulang di atasnya dan batas tegas menekan tanpa invasi","✔ Slide: meningioma well-demarcated (kompresi, tanpa invasi) dengan hiperostosis; catatan kuliah: kelainan di tulang → hampir pasti meningioma, bukan sel glia. Tumor extra-axial = sel meningen."],
+["Infiltrasi difus tanpa batas jelas","Khas glioma/astrositoma (infiltratif, poor demarcation)."],
+["Nekrosis geografik luas","Mengarah ke tumor high-grade (GBM/MPNST)."],
+["Mitosis atipik banyak","Menandakan grade tinggi, bukan asal meningeal."],
+["Banyak lesi bulat pada batas gray-white","Pola metastasis."]]),
+Q(3,"Wanita 58 tahun dengan eksoftalmos unilateral progresif dan penurunan visus. CT: massa padat di sphenoid ridge dan hiperostosis. Kesimpulan yang paling tepat adalah…",[
+["Meningioma sphenoid ridge yang mendesak orbita dari belakang-depan","✔ Slide: sphenoid ridge adalah lokasi umum meningioma; massa yang dari depan dapat mendesak mata → eksoftalmus. Perempuan lebih sering (2:1)."],
+["Schwannoma vestibular","Terletak di sudut serebelopontin, gejala N. VIII, tidak menyebabkan eksoftalmos."],
+["Glioma batang otak","Gejala saraf kranial/long tract, bukan proptosis dengan hiperostosis."],
+["Metastasis serebelum","Infratentorial; tidak terkait orbita."],
+["Ependimoma ventrikel IV","Menimbulkan hidrosefalus obstruktif, bukan proptosis."]]),
+Q(4,"Pria 65 tahun dengan massa meningeal di foramen magnum. Neurolog menyebut kasus ini paling mengancam jiwa dibanding lokasi meningioma lain. Mekanisme yang paling tepat adalah…",[
+["Kompresi medula oblongata yang memuat pusat kardiorespirasi","✔ Slide: lesi sampai foramen magnum paling menakutkan karena mengancam denyut jantung & pernapasan (desakan hingga kematian). Meski tumor jinak, ruang terbatas membuat efek massa fatal."],
+["Obstruksi aquaduktus Sylvii","Mekanisme hidrosefalus akibat lesi mesensefalon/IV; bukan alasan utama di foramen magnum."],
+["Invasi sinus sagitalis superior","Khas meningioma parasagital, bukan foramen magnum."],
+["Produksi LCS berlebih oleh pleksus koroideus","Bukan akibat meningioma foramen magnum."],
+["Perdarahan intratumoral masif","Tidak khas; ancaman utama adalah kompresi mekanis."]]),
+Q(4,"Pria 63 tahun, hemiparesis kiri 6 minggu dan kejang. MRI: lesi hemisfer kanan heterogen dengan area nekrosis sentral. Histologi: sel astrositik pleomorfik, mitosis banyak, proliferasi endotel, dan area nekrosis yang dikelilingi inti tumor tersusun palisading. Diagnosis dan gradenya adalah…",[
+["Glioblastoma multiforme, WHO grade 4","✔ Slide: GBM = astrositoma + nekrosis dan pseudopalisading, tampilan variegata (multiforme). Nekrosis dan nuclear palisading = KHAS."],
+["Astrositoma anaplastik, grade 3","Memiliki mitosis dan proliferasi endotel, tetapi tanpa nekrosis."],
+["Astrositoma difus, grade 2","Hanya hiperselularitas/pleomorfisme ringan tanpa nekrosis; slide glioma menekankan tidak ada perdarahan & nekrosis."],
+["Meningioma atipikal","Tumor extra-axial berbasis dura; pola whorls, bukan pseudopalisading."],
+["Metastasis karsinoma paru","Cenderung multipel dan berbatas tegas; tumor primer ini infiltratif."]]),
+Q(4,"Dua pasien dengan astrositoma fibriler: pasien A usia 25 tahun, pasien B usia 68 tahun. Pernyataan yang paling sesuai dengan materi adalah…",[
+["Pasien A lebih mungkin low grade, pasien B lebih mungkin grade tinggi (GBM)","✔ Slide fibrillary astrocytoma: low grade in young, higher grade in older. Pada dewasa tumor padat supratentorial dan ganas (fibriler). Catatan tulis tangan yang mengatakan grade makin tinggi usia makin muda tidak sesuai dengan slide dan literatur standar, perlu diverifikasi."],
+["Pasien A lebih mungkin GBM, pasien B lebih mungkin low grade","Terbalik; GBM terutama mengenai dewasa tua."],
+["Keduanya selalu grade 1 karena astrositoma bersifat jinak","Astrositoma “benign but malignant behavior”; infiltratif dan dapat berprogresi."],
+["Usia tidak berhubungan dengan grade","Slide secara eksplisit mengaitkan usia dengan grade."],
+["Astrositoma fibriler hanya terjadi pada anak","Anak umumnya tipe pilositik di serebelum."]]),
+Q(3,"Hasil reseksi suatu meningioma menunjukkan mitosis tinggi, nekrosis, dan invasi ke parenkim otak. Klasifikasi yang paling tepat adalah…",[
+["Meningioma anaplastik, grade 3","✔ Slide: ada 3 grade; grade 3 = anaplastik, paling ganas, dengan perilaku agresif dan invasi."],
+["Meningioma meningotelial, grade 1","Grade 1 jinak, batas tegas, tanpa invasi atau nekrosis."],
+["Meningioma grade 2","Grade menengah; belum mencakup invasi dan mitosis sangat tinggi."],
+["Hemangioperisitoma jinak","Bukan kategori yang ditekankan; temuan di sini meliputi kriteria anaplasia."],
+["Schwannoma maligna","Berasal dari sel Schwann pada saraf, bukan sel meningen."]]),
+Q(3,"Pria 45 tahun dengan tuli sensorineural unilateral progresif, tinnitus, dan ataksia ringan. MRI: massa di sudut serebelopontin. Histologi menunjukkan area Antoni A dan B. Pernyataan yang paling tepat adalah…",[
+["Schwannoma vestibular (neuroma akustik); berkapsul dan umumnya dapat direseksi","✔ Slide: acoustic = vestibular schwannoma (N. VIII). Schwannoma berkapsul, menekan trunkus saraf, mudah direseksi tanpa merusak saraf berarti; mikroskopik Antoni A/B dan Verocay."],
+["Neurofibroma; tidak berkapsul dan melibatkan trunkus saraf","Antoni A/B bukan ciri neurofibroma (bifasik, nukleus bergelombang)."],
+["Meningioma sudut serebelopontin","Whorls/psammoma, bukan Antoni A/B; juga bukan dari selubung saraf."],
+["MPNST","Hiperselular, mitosis banyak, nekrosis; tidak dengan pola Antoni terorganisasi."],
+["Metastasis soliter serebelum","Tidak menjelaskan lokasi sudut serebelopontin dan pola Antoni."]]),
+Q(4,"Wanita 26 tahun dengan tuli progresif bilateral. MRI: massa di kedua sudut serebelopontin dan beberapa massa ekstra-aksial lain di konveksitas. Ayahnya mengalami gejala serupa. Diagnosis dan lokus gen yang paling tepat adalah…",[
+["Neurofibromatosis tipe 2, kromosom 22q","✔ Slide NF2 (rare, 22q, 1:40.000): schwannoma akustik bilateral, meningioma multipel, ependimoma spinal; pewarisan dominan."],
+["Neurofibromatosis tipe 1, kromosom 17q","NF1: neurofibroma, glioma optik, nodul Lisch, café-au-lait; schwannoma bilateral bukan ciri utama."],
+["Sindrom Sturge-Weber","Angiomatosis ensefalofasial dengan nevus wajah; tidak menyebabkan schwannoma bilateral."],
+["Tuberous sclerosis","Hamartoma multipel, kejang, lesi kulit; bukan schwannoma vestibular bilateral."],
+["Neuroblastoma familial","Tumor blast adrenal; tidak menjelaskan gambaran CNS."]]),
+Q(3,"Anak 10 tahun dengan bercak café-au-lait multipel, nodul Lisch, dan penurunan visus. MRI: massa pada saraf optik. Tumor yang paling konsisten dengan sindrom ini adalah…",[
+["Glioma saraf optik","✔ Slide NF1: plexiform & solitary neurofibromas, optic nerve gliomas, Lisch nodules, café-au-lait spots (AD, 17q)."],
+["Schwannoma vestibular bilateral","Penanda NF2."],
+["Meningioma multipel","Lebih terkait NF2."],
+["Ependimoma spinal","Lebih terkait NF2."],
+["Medulloblastoma","Tumor embrional serebelum, bukan komponen NF1."]]),
+Q(4,"Pria 35 tahun dengan NF1 dan neurofibroma pleksiform di paha. Dalam 3 bulan massa membesar cepat dan muncul nyeri baru. Biopsi: fasikulus padat sel spindle hiperkromatik, mitosis banyak, dan nekrosis geografik. Diagnosis yang paling tepat adalah…",[
+["Malignant peripheral nerve sheath tumor (MPNST)","✔ Slide MPNST: sekitar separuh kasus terkait NF1, biasanya dari plexiform neurofibroma; pembesaran cepat dan nyeri baru perlu dicurigai transformasi ganas; histologi hiperseluler, mitosis banyak, nekrosis."],
+["Schwannoma","Berkapsul, Antoni A/B, tanpa mitosis/nekrosis; tidak menjelaskan transformasi cepat."],
+["Neurofibroma pleksiform tanpa perubahan","Sel bland tanpa mitosis nyata; temuan di sini menunjukkan keganasan."],
+["Meningioma atipikal","Bukan tumor jaringan lunak perifer."],
+["Glioma batang otak","Lokasi dan histogenesis berbeda."]]),
+Q(3,"Pada operasi ditemukan massa fusiform yang melibatkan trunkus saraf, tidak berkapsul. Histologi: sel spindle berinti bergelombang dalam stroma kolagen/miksoid dengan campuran fibroblas dan sel Schwann. Diagnosis dan implikasi bedahnya adalah…",[
+["Neurofibroma; sulit direseksi tanpa mengorbankan saraf","✔ Slide: neurofibroma = bifasik (fibroblas + Schwann), non-encapsulated, melibatkan nerve trunk, tidak dapat direseksi tanpa mengorbankan saraf. Schwannoma sebaliknya berkapsul dan resektabel."],
+["Schwannoma; mudah dilepas dari saraf","Schwannoma berkapsul; tidak sesuai dengan temuan non-encapsulated."],
+["MPNST derajat tinggi; selalu berkapsul","Tidak ada atipia/mitosis nyata, dan MPNST bersifat infiltratif."],
+["Meningioma; basis dura","Bukan tumor saraf perifer."],
+["Ganglioneuroma mediastinum","Tumor neuroektodermal mediastinum, tidak sesuai lokasi dan histologi."]]),
+Q(3,"Pria 62 tahun, perokok berat, kejang baru. MRI: beberapa lesi bulat berbatas tegas dengan edema di perbatasan gray-white. Pernyataan yang paling tepat adalah…",[
+["Metastasis intrakranial; berbatas tegas, berbeda dengan tumor primer yang infiltratif","✔ Slide: metastasis well-demarcated dan merupakan tumor SSP tersering; tumor primer infiltratif. Asal tersering paru, payudara, GIT."],
+["Glioblastoma multipel; infiltratif tanpa batas","GBM batas tidak tegas dan umumnya tunggal."],
+["Meningioma multipel; hiperostosis","Berbasis dura, bukan lesi parenkimal di gray-white junction."],
+["Medulloblastoma; serebelum anak","Usia dan lokasi tidak cocok."],
+["Schwannoma bilateral; N. VIII","Bukan lesi parenkimal otak multipel."]]),
+Q(3,"Anak 4 tahun dengan muntah pagi dan sakit kepala. MRI: massa di ventrikel IV dengan pelebaran ventrikel lateral dan III. Mekanisme klinis dan kemungkinan tumornya adalah…",[
+["Hidrosefalus obstruktif akibat massa ventrikel IV; ependimoma","✔ Slide: ependimoma = ventrikel IV. Massa menyumbat aliran LCS (ventrikel → subarachnoid), meningkatkan TIK (nyeri kepala, muntah)."],
+["Hidrosefalus komunikans akibat gangguan resorpsi di granulasio arachnoidea; meningioma","Pada kasus ini obstruksi terjadi di dalam sistem ventrikel; meningioma bukan tumor ventrikel IV."],
+["Produksi LCS berlebih; glioblastoma","Tidak sesuai lokasi/usia dan mekanismenya obstruktif."],
+["Atrofi kortikal ex vacuo; astrositoma fibriler","Ventrikel melebar karena obstruksi, bukan atrofi."],
+["Herniasi tonsil; Arnold-Chiari","Tidak ada massa di ventrikel IV pada Chiari."]]),
+Q(3,"Bayi dengan meningomielokel lumbosakral dan hidrosefalus. MRI: tonsil serebelum dan medula turun melalui foramen magnum. Kelainan fossa posterior yang menyertai adalah…",[
+["Malformasi Arnold-Chiari","✔ Slide malformasi: Arnold-Chiari = herniasi infratentorial; sering menyertai spina bifida (defek tabung saraf) dan menyebabkan hidrosefalus."],
+["Malformasi Dandy-Walker","Kista fossa posterior dengan hipoplasia vermis, bukan herniasi tonsil."],
+["Holoprosensefali","Kelainan otak depan dengan anomali wajah."],
+["Polimikrogiria","Kelainan korteks, tidak menjelaskan herniasi."],
+["Siringomielia saja","Rongga di medula spinalis; tidak menjelaskan herniasi kaudal."]]),
+Q(4,"Pria 40 tahun dengan NF1. Biopsi lesi pleksiform di lengan: selularitas meningkat dan atipia inti, tetapi aktivitas mitosis rendah dan tanpa nekrosis. Interpretasi yang paling tepat adalah…",[
+["ANNUBP; potensi biologis belum pasti, tidak semua berprogresi menjadi MPNST","✔ Slide hubungan NF1: plexiform neurofibroma → ANNUBP → MPNST low/high grade. ANNUBP = lesi dengan potensi biologis tidak pasti; butuh sampling representatif dan korelasi klinis-radiologis."],
+["Neurofibroma pleksiform biasa tanpa risiko","Atipia dan selularitas meningkat bukan temuan neurofibroma biasa."],
+["MPNST high-grade","Kriteria mitosis tinggi dan nekrosis belum terpenuhi."],
+["Schwannoma","Tidak ada Antoni A/B, Verocay, maupun kapsul."],
+["Neuroblastoma","Tumor blast adrenal; tidak sesuai."]])
+];
+
+const $=s=>document.querySelector(s),app=$("#app");
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let qs=[],i=0,score=0,sc={1:[0,0],2:[0,0]},res=[],done=false;
+const lvl=l=>l<=2?"C1–C2":"C3–C4";
+const grp=l=>l<=2?1:2;
+
+function home(){
+  app.innerHTML=`<div class="card"><h1>Kuis Kasus Neuropatologi: Neoplasma SSP</h1>
+  <p class="mut">30 soal (15 C1–C2 dan 15 C3–C4) dengan 5 pilihan. Urutan soal dan pilihan diacak setiap kali memulai. Setelah menjawab, pembahasan semua opsi ditampilkan beserta clinical reasoning.</p>
+  <button class="btn" id="go">Mulai kuis</button></div>`;
+  $("#go").onclick=start;
+}
+function start(){
+  qs=sh(DATA).map(q=>({...q,o:sh(q.o.map((x,k)=>({t:x[0],e:x[1],ok:k===0})))}));
+  i=0;score=0;sc={1:[0,0],2:[0,0]};res=[];show();
+}
+function show(){
+  const q=qs[i],L="ABCDE";done=false;
+  app.innerHTML=`<div class="card"><div class="mut">Soal ${i+1} dari ${qs.length} · Skor ${score}</div>
+  <div class="bar"><i style="width:${i/qs.length*100}%"></i></div>
+  <span class="tag">${lvl(q.lv)}</span>
+  <p class="stem">${q.s}</p>
+  <div id="ops">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="L">${L[k]}.</span><span class="oc">${o.t}<span class="ex"></span></span></button>`).join("")}</div>
+  <div class="row"><span class="mut" id="fb"></span><button class="btn" id="nx" style="display:none">${i+1<qs.length?"Soal berikutnya":"Lihat hasil"}</button></div></div>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(+b.dataset.k));
+  $("#nx").onclick=()=>{i++;i<qs.length?show():finish();window.scrollTo(0,0)};
+}
+function pick(k){
+  if(done)return;done=true;
+  const q=qs[i],g=grp(q.lv),right=q.o[k].ok;
+  sc[g][1]++;if(right){score++;sc[g][0]++}
+  res.push(right);
+  document.querySelectorAll(".opt").forEach((b,n)=>{
+    const o=q.o[n];b.disabled=true;b.classList.add("show");
+    b.querySelector(".ex").innerHTML=(o.ok?"":"✘ Kurang tepat: ")+o.e;
+    if(o.ok)b.classList.add("ok");else if(n===k)b.classList.add("no");
+  });
+  $("#fb").textContent=right?"Jawaban Anda benar.":"Jawaban Anda belum tepat; pelajari pembahasan tiap opsi.";
+  $("#nx").style.display="inline-block";
+}
+function finish(){
+  const p=Math.round(score/qs.length*100);
+  app.innerHTML=`<div class="card"><h1>Hasil</h1><div class="big">${score} / ${qs.length} <span class="mut">(${p}%)</span></div>
+  <div class="bar"><i style="width:${p}%"></i></div>
+  <p>C1–C2: <b>${sc[1][0]}/${sc[1][1]}</b> · C3–C4: <b>${sc[2][0]}/${sc[2][1]}</b></p>
+  <div class="row"><button class="btn" id="re">Ulangi (soal diacak)</button></div></div>`;
+  $("#re").onclick=start;
+}
+home();
+</script>
+</body>
+</html>
